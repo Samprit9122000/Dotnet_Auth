@@ -102,6 +102,7 @@ namespace Dotnet_Auth.Services
 
         public async Task<List<common_data>> GetAllDataAfterAuthorization() 
         {
+
             var data = await _context.common_data
                 .Include(d => d.user)
                 .ToListAsync();
@@ -116,7 +117,7 @@ namespace Dotnet_Auth.Services
             var claims = new List<Claim>
             {
                 new Claim("username", user.user_name),
-                new Claim("email", user.email)
+                new Claim("useremail", user.email)
 
             };
 
