@@ -43,6 +43,22 @@ namespace Dotnet_Auth.Controllers
             return Unauthorized(response);
         }
 
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> Login([FromBody] TokenRefreshViewModel request)
+        {
+            // Here you would typically validate the user credentials
+            // For demonstration, we will return a dummy token
+            var response = await _userService.TokenRefresh(request.refresh_token, request.user_email);
+            
+            if((bool)response.meta_data.success)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+
         [Authorize]
         [HttpGet("FetchAllData/AfterAuthorization")]
         public async Task<IActionResult> FetchAllDataAfterAuthorization()
