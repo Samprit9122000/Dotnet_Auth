@@ -48,8 +48,11 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.id).HasDefaultValueSql("gen_random_uuid()");
             entity.Property(e => e.email).HasMaxLength(200);
             entity.Property(e => e.password).HasMaxLength(600);
+            entity.Property(e => e.refresh_token).HasColumnType("character varying");
+            entity.Property(e => e.role).HasMaxLength(200);
             entity.Property(e => e.user_name).HasMaxLength(200);
         });
+
 
         OnModelCreatingPartial(modelBuilder);
     }

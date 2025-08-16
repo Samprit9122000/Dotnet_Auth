@@ -2,6 +2,7 @@ using Dotnet_Auth.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,6 +76,29 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         IssuerSigningKey = new SymmetricSecurityKey(
             System.Text.Encoding.UTF8.GetBytes(builder.Configuration["token_creds:BaseKey"])
         )
+    };
+
+    // Over ride the default responses when token failed
+    options.Events = new JwtBearerEvents
+    {
+        OnChallenge = context =>
+        {
+            // Skip the default response
+            context.HandleResponse();
+
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.ContentType = "application/json";
+            var result = JsonSerializer.Serialize(new { status = context.Response.StatusCode ,message = "Unauthorized user" });
+            return context.Response.WriteAsync(result);
+        },
+        OnForbidden = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            context.Response.ContentType = "application/json";
+            var result = JsonSerializer.Serialize(new { status = context.Response.StatusCode, message = "Access denied: insufficient permissions" });
+            return context.Response.WriteAsync(result);
+        }
+
     };
 });
 

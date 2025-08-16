@@ -13,5 +13,9 @@ public partial class user_info
 
     public string? password { get; set; }
 
+    public string? role { get; set; }
+
+    public string? refresh_token { get; set; }
+
     public virtual ICollection<common_data> common_data { get; set; } = new List<common_data>();
 }

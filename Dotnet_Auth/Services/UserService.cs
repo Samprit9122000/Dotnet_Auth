@@ -117,7 +117,9 @@ namespace Dotnet_Auth.Services
             var claims = new List<Claim>
             {
                 new Claim("username", user.user_name),
-                new Claim("useremail", user.email)
+                new Claim("useremail", user.email),
+                new Claim(ClaimTypes.Role,user.role ?? ""),
+                new Claim("RefreshToken",user.refresh_token ?? "")
 
             };
 
